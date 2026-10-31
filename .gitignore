@@ -1,0 +1,19 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Django specific
+*.sqlite3
+.env
+
+# Code editors and IDEs
+.vscode/
+.idea/
+.DS_Store
