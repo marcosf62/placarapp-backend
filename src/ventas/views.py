@@ -14,6 +14,6 @@ class DetallePedidoViewSet(viewsets.ModelViewSet):
     serializer_class = DetallePedidoSerializer
 
 
-class PagoViewSet(viewsets.ModelViewSet):
+class PagoViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Pago.objects.all()
     serializer_class = PagoSerializer
