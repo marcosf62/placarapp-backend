@@ -40,6 +40,9 @@ INSTALLED_APPS = [
     'django_filters',
     'drf_spectacular',
     'catalogo',
+    'clientes',
+    'logistica',
+    'ventas',
 ]
 
 REST_FRAMEWORK = {
