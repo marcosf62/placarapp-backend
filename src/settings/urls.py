@@ -23,4 +23,6 @@ urlpatterns = [
 
     #linea para registrar el modulo de ventas
     path('api/ventas/', include('ventas.urls')),
+
+    path('api/logistica/', include('logistica.urls')),
 ]
