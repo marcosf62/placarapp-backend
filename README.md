@@ -25,3 +25,20 @@ Cualquier modificación debe ser comunicada al equipo.
 - M2M: relación muchos a muchos.
 
 **Nota:** Los campos indicados son una propuesta inicial y deben validarse entre todos los integrantes antes de implementarlos.
+
+
+
+Cómo levantar el proyecto (con Docker)
+
+1. Clonar el repositorio y ubicarse en la carpeta del proyecto.
+2. Levantar los contenedores:
+   ```bash
+   docker-compose up --build -d
+
+
+
+Acceder a la documentación de la API:
+
+Swagger: http://localhost:8000/api/schema/swagger
+
+ReDoc: http://localhost:8000/api/schema/redoc

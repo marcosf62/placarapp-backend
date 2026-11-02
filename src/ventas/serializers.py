@@ -16,7 +16,7 @@ class PagoSerializer(serializers.ModelSerializer):
 class PedidoSerializer(serializers.ModelSerializer):
 
     #incluimos los serializers anidados para que al consultar un pedido tambien se devuelvan sus items (detalles) y su informacion de pago asociada
-    detalles = DetallePedidoSerializer(many=True, read_only=True)
+    detalles_pedido = DetallePedidoSerializer(many=True, read_only=True)
     pago = PagoSerializer(read_only=True)
 
 
@@ -32,7 +32,7 @@ class PedidoSerializer(serializers.ModelSerializer):
             'tipo_entrega',
             'sucursal_retiro',
             'direccion_envio',
-            'detalles',
+            'detalles_pedido',
             'pago'
 
 
