@@ -1,7 +1,10 @@
 .venv/
 __pycache__/
 *.py[cod]
+*.pyo
+*.pyd
 .git/
+.gitignore
 .github/
 .idea/
 .vscode/

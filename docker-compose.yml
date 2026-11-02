@@ -2,7 +2,9 @@ services:
   web:
     build: .
     container_name: placarapp-backend
-    command: sh -c "uv run src/manage.py migrate && uv run src/manage.py runserver 0.0.0.0:8000"
+    command: >
+      sh -c "uv run python src/manage.py migrate &&
+            uv run python src/manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/app
     ports:
