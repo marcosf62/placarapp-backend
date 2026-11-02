@@ -5,6 +5,7 @@ from rest_framework.decorators import action
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
+from django.shortcuts import render
 
 from .models import Categoria, Material, Producto
 from .serializers import (
@@ -89,3 +90,10 @@ class ProductoViewSet(viewsets.ModelViewSet):
             return self.get_paginated_response(serializer.data)
         serializer = ProductoListSerializer(queryset, many=True)
         return Response(serializer.data)
+    
+def bienvenida(request):
+    contexto = {
+        "total_productos": Producto.objects.filter(activo=True).count(),
+        "total_categorias": Categoria.objects.filter(activa=True).count(),
+    }
+    return render(request, "catalogo/bienvenida.html", contexto)

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PlacarApp · Mueblería</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 0; background: #faf6f1; color: #2b2118; }
+    header { background: #5c3d2e; color: #fff; padding: 3rem 1.5rem; text-align: center; }
+    header h1 { margin: 0 0 .5rem; font-size: 2.5rem; }
+    main { max-width: 720px; margin: 2rem auto; padding: 0 1.5rem; }
+    .cifras { display: flex; gap: 1rem; margin: 1.5rem 0; }
+    .cifra { flex: 1; background: #fff; border-radius: 8px; padding: 1rem; text-align: center; }
+    .cifra strong { display: block; font-size: 2rem; color: #5c3d2e; }
+    ul { padding-left: 1.2rem; }
+    a { color: #8a4b2a; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>PlacarApp</h1>
+    <p>Mueblería: la API de nuestra tienda de muebles</p>
+  </header>
+  <main>
+    <p>Bienvenida a la API REST de PlacarApp. Desde acá accedés al catálogo, los clientes, los pedidos y la logística de la tienda.</p>
+
+    <div class="cifras">
+      <div class="cifra"><strong>{{ total_productos }}</strong> productos activos</div>
+      <div class="cifra"><strong>{{ total_categorias }}</strong> categorías</div>
+    </div>
+
+    <h2>Enlaces útiles</h2>
+    <ul>
+      <li><a href="/api/">API navegable</a></li>
+      <li><a href="/api/schema/swagger/">Documentación Swagger</a></li>
+      <li><a href="/api/schema/redoc/">Documentación Redoc</a></li>
+      <li><a href="/admin/">Panel de administración</a></li>
+    </ul>
+  </main>
+</body>
+</html>
