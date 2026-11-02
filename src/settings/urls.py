@@ -10,9 +10,10 @@ from drf_spectacular.views import (
 )
 
 from .routers import router
-
+from catalogo.views import bienvenida
 
 urlpatterns = [
+    path("", bienvenida, name="bienvenida"),
     path("admin/", admin.site.urls),
 
     # Rutas generales de la API
