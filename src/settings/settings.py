@@ -50,6 +50,12 @@ INSTALLED_APPS = [
 
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
 }
@@ -58,6 +64,7 @@ SPECTACULAR_SETTINGS = {
     'TITLE': 'API de la mueblería',
     'DESCRIPTION': 'API REST de la tienda de muebles',
     'VERSION': '1.0',
+    'REDOC_DIST': 'https://cdn.jsdelivr.net/npm/redoc@2.1.5',
 }
 
 MIDDLEWARE = [
@@ -148,24 +155,6 @@ MAILERS = {
     },
 }
 
-REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
-    ],
-
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10,
-}
-
-SPECTACULAR_SETTINGS = {
-    'TITLE': 'API de la mueblería',
-    'DESCRIPTION': 'API REST de la tienda de muebles',
-    'VERSION': '1.0',
-    "REDOC_DIST": "https://cdn.jsdelivr.net/npm/redoc@2.1.5",
-}
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
