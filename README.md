@@ -1,5 +1,5 @@
 
-##modelo de datos
+## modelo de datos
 
 Antes de comenzar a programar, acordamos los modelos, sus campos y sus relaciones.
 Cualquier modificación debe ser comunicada al equipo.
@@ -30,15 +30,34 @@ Cualquier modificación debe ser comunicada al equipo.
 
 Cómo levantar el proyecto (con Docker)
 
-1. Clonar el repositorio y ubicarse en la carpeta del proyecto.
-2. Levantar los contenedores:
-   ```bash
-   docker-compose up --build -d
+Clonar el repositorio y ubicarse en la carpeta del proyecto.
 
+Levantar los contenedores:
 
+docker compose up --build -d
 
-Acceder a la documentación de la API:
+Para detener los contenedores:
 
-Swagger: http://localhost:8000/api/schema/swagger
+docker compose down
 
-ReDoc: http://localhost:8000/api/schema/redoc
+Acceder a la aplicación
+
+Swagger: http://localhost:8000/api/schema/swagger/
+
+ReDoc: http://localhost:8000/api/schema/redoc/
+
+Django Admin: http://localhost:8000/admin/
+
+Capturas de pantalla
+
+### Documentación Swagger
+
+![Documentación Swagger](docs/capturas/swagger.png)
+
+### Documentación ReDoc
+
+![Documentación ReDoc](docs/capturas/redoc.png)
+
+### Panel de administración Django
+
+![Panel de administración](docs/capturas/admin.png)
