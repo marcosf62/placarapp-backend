@@ -1,26 +1,43 @@
-"""
-URL configuration for settings project.
 
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/6.1/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
-from django.urls import path, include 
+from django.urls import path, include
+from rest_framework.authtoken.views import obtain_auth_token
+
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularRedocView,
+    SpectacularSwaggerView,
+)
+
+from .routers import router
+from catalogo.views import bienvenida
 
 urlpatterns = [
+    path("", bienvenida, name="bienvenida"),
+    path("admin/", admin.site.urls),
 
-    path('admin/', admin.site.urls),
+    # Rutas generales de la API
+    path("api/", include(router.urls)),
 
-    #linea para registrar el modulo de ventas
-    path('api/ventas/', include('ventas.urls')),
+    # Aplicaciones
+    path("api/ventas/", include("ventas.urls")),
+    path("api/logistica/", include("logistica.urls")),
+    path("api/clientes/", include("clientes.urls")),
+
+    # Autenticación
+    path("api/token/", obtain_auth_token, name="api_token_auth"),
+    path("api-auth/", include("rest_framework.urls")),
+
+    # Documentación
+    path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
+    path(
+        "api/schema/swagger/",
+        SpectacularSwaggerView.as_view(url_name="schema"),
+        name="swagger-ui",
+    ),
+    path(
+        "api/schema/redoc/",
+        SpectacularRedocView.as_view(url_name="schema"),
+        name="redoc",
+    ),
 ]

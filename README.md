@@ -1,5 +1,5 @@
 
-##modelo de datos
+## modelo de datos
 
 Antes de comenzar a programar, acordamos los modelos, sus campos y sus relaciones.
 Cualquier modificación debe ser comunicada al equipo.
@@ -25,3 +25,39 @@ Cualquier modificación debe ser comunicada al equipo.
 - M2M: relación muchos a muchos.
 
 **Nota:** Los campos indicados son una propuesta inicial y deben validarse entre todos los integrantes antes de implementarlos.
+
+
+
+Cómo levantar el proyecto (con Docker)
+
+Clonar el repositorio y ubicarse en la carpeta del proyecto.
+
+Levantar los contenedores:
+
+docker compose up --build -d
+
+Para detener los contenedores:
+
+docker compose down
+
+Acceder a la aplicación
+
+Swagger: http://localhost:8000/api/schema/swagger/
+
+ReDoc: http://localhost:8000/api/schema/redoc/
+
+Django Admin: http://localhost:8000/admin/
+
+Capturas de pantalla
+
+### Documentación Swagger
+
+![Documentación Swagger](docs/capturas/swagger.png)
+
+### Documentación ReDoc
+
+![Documentación ReDoc](docs/capturas/redoc.png)
+
+### Panel de administración Django
+
+![Panel de administración](docs/capturas/admin.png)
