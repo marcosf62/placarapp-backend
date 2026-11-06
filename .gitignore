@@ -17,3 +17,4 @@ wheels/
 .vscode/
 .idea/
 .DS_Store
+src/staticfiles/
