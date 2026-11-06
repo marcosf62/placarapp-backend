@@ -134,7 +134,21 @@ class PedidoViewSet(viewsets.ModelViewSet):
                     if producto_id is None or cantidad_recibida is None:
                         raise ValueError("Faltan datos del producto.")
 
-                    cantidad = int(cantidad_recibida)
+                    if isinstance(cantidad_recibida, bool):
+                        raise ValueError("La cantidad debe ser un número entero.")
+
+                    try:
+                        cantidad_decimal = Decimal(str(cantidad_recibida))
+                    except (InvalidOperation, TypeError, ValueError):
+                        raise ValueError("La cantidad debe ser un número entero.")
+
+                    if (
+                        not cantidad_decimal.is_finite()
+                        or cantidad_decimal != cantidad_decimal.to_integral_value()
+                    ):
+                        raise ValueError("La cantidad debe ser un número entero.")
+
+                    cantidad = int(cantidad_decimal)
 
                     if cantidad <= 0:
                         raise ValueError("La cantidad debe ser mayor que cero.")
