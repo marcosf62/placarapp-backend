@@ -1,7 +1,7 @@
 
 from django.contrib import admin
 from django.urls import path, include
-from rest_framework.authtoken.views import obtain_auth_token
+from .auth_views import LoginView
 
 from drf_spectacular.views import (
     SpectacularAPIView,
@@ -25,7 +25,7 @@ urlpatterns = [
     path("api/clientes/", include("clientes.urls")),
 
     # Autenticación
-    path("api/token/", obtain_auth_token, name="api_token_auth"),
+    path("api/token/", LoginView.as_view(), name="api_token_auth"),
     path("api-auth/", include("rest_framework.urls")),
 
     # Documentación
