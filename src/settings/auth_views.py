@@ -1,0 +1,22 @@
+from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.response import Response
+
+
+class LoginView(ObtainAuthToken):
+    """Login por token. Además del token devuelve el usuario y si es staff."""
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(
+            data=request.data, context={"request": request}
+        )
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data["user"]
+        token, _ = Token.objects.get_or_create(user=user)
+        return Response(
+            {
+                "token": token.key,
+                "username": user.username,
+                "is_staff": user.is_staff,
+            }
+        )

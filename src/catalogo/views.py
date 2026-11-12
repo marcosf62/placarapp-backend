@@ -3,7 +3,7 @@ from drf_spectacular.utils import extend_schema
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.filters import OrderingFilter, SearchFilter
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from .permissions import IsStaffOrReadOnly
 from rest_framework.response import Response
 from django.shortcuts import render
 
@@ -21,7 +21,7 @@ class CategoriaViewSet(viewsets.ModelViewSet):
 
     queryset = Categoria.objects.all().order_by("id")
     serializer_class = CategoriaSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsStaffOrReadOnly]
 
     @extend_schema(
         summary="Productos de una categoría",
@@ -45,7 +45,7 @@ class MaterialViewSet(viewsets.ReadOnlyModelViewSet):
 
     queryset = Material.objects.all().order_by("id")
     serializer_class = MaterialSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsStaffOrReadOnly]
 
 
 class ProductoViewSet(viewsets.ModelViewSet):
@@ -57,7 +57,7 @@ class ProductoViewSet(viewsets.ModelViewSet):
         .prefetch_related("materiales")
         .order_by("id")
     )
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsStaffOrReadOnly]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = {
         "categoria": ["exact"],
