@@ -90,3 +90,103 @@ class EnsureStaffSuperuserTests(TestCase):
         usuario = User.objects.get(username="admin_render")
         self.assertFalse(usuario.is_staff)
         self.assertFalse(usuario.is_superuser)
+
+
+from rest_framework import status
+from rest_framework.test import APITestCase
+
+from .models import Cliente, Direccion
+
+
+class ClienteOwnershipTests(APITestCase):
+    def setUp(self):
+        User = get_user_model()
+        self.usuario = User.objects.create_user(
+            username="propietario", password="Clave-Test-2026!"
+        )
+        self.otro_usuario = User.objects.create_user(
+            username="otro", password="Clave-Test-2026!"
+        )
+
+        self.cliente = Cliente.objects.create(
+            usuario=self.usuario,
+            nombre="Cliente",
+            apellido="Propietario",
+            email="propietario@example.test",
+        )
+        self.otro_cliente = Cliente.objects.create(
+            usuario=self.otro_usuario,
+            nombre="Otro",
+            apellido="Cliente",
+            email="otro@example.test",
+        )
+
+        self.direccion = Direccion.objects.create(
+            cliente=self.cliente,
+            calle="San Martín",
+            numero="100",
+            ciudad="Río Cuarto",
+            codigo_postal="5800",
+        )
+        self.otra_direccion = Direccion.objects.create(
+            cliente=self.otro_cliente,
+            calle="Belgrano",
+            numero="200",
+            ciudad="Córdoba",
+            codigo_postal="5000",
+        )
+
+    def test_cliente_solo_consulta_su_perfil(self):
+        self.client.force_authenticate(self.usuario)
+
+        listado = self.client.get("/api/clientes/clientes/")
+        propio = self.client.get(
+            f"/api/clientes/clientes/{self.cliente.id}/"
+        )
+        ajeno = self.client.get(
+            f"/api/clientes/clientes/{self.otro_cliente.id}/"
+        )
+
+        self.assertEqual(listado.status_code, status.HTTP_200_OK)
+        self.assertEqual(listado.data["count"], 1)
+        self.assertEqual(propio.status_code, status.HTTP_200_OK)
+        self.assertEqual(ajeno.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_cliente_solo_consulta_sus_direcciones(self):
+        self.client.force_authenticate(self.usuario)
+
+        listado = self.client.get("/api/clientes/direcciones/")
+        propia = self.client.get(
+            f"/api/clientes/direcciones/{self.direccion.id}/"
+        )
+        ajena = self.client.get(
+            f"/api/clientes/direcciones/{self.otra_direccion.id}/"
+        )
+
+        self.assertEqual(listado.status_code, status.HTTP_200_OK)
+        self.assertEqual(listado.data["count"], 1)
+        self.assertEqual(propia.status_code, status.HTTP_200_OK)
+        self.assertEqual(ajena.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_crear_direccion_asigna_al_cliente_autenticado(self):
+        self.client.force_authenticate(self.usuario)
+
+        respuesta = self.client.post(
+            "/api/clientes/direcciones/",
+            {
+                "cliente": self.otro_cliente.id,
+                "calle": "Mitre",
+                "numero": "300",
+                "ciudad": "Río Cuarto",
+                "codigo_postal": "5800",
+            },
+            format="json",
+        )
+
+        self.assertEqual(
+            respuesta.status_code, status.HTTP_201_CREATED,
+            respuesta.data,
+        )
+
+        direccion = Direccion.objects.get(pk=respuesta.data["id"])
+        self.assertEqual(direccion.cliente_id, self.cliente.id)
