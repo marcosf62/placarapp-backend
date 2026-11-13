@@ -190,3 +190,93 @@ class ClienteOwnershipTests(APITestCase):
 
         direccion = Direccion.objects.get(pk=respuesta.data["id"])
         self.assertEqual(direccion.cliente_id, self.cliente.id)
+
+
+class RegistroClienteTests(APITestCase):
+    def datos_validos(self):
+        return {
+            "username": "nuevo_usuario",
+            "email": "nuevo@example.test",
+            "nombre": "Ana",
+            "apellido": "García",
+            "telefono": "3584000000",
+            "password": "Registro-Privado-2026!",
+            "password_confirm": "Registro-Privado-2026!",
+        }
+
+    def registrar(self, datos=None):
+        return self.client.post(
+            "/api/clientes/registro/",
+            datos or self.datos_validos(),
+            format="json",
+        )
+
+    def test_registro_crea_usuario_y_perfil_cliente(self):
+        respuesta = self.registrar()
+
+        self.assertEqual(
+            respuesta.status_code, status.HTTP_201_CREATED, respuesta.data
+        )
+
+        User = get_user_model()
+        usuario = User.objects.get(username="nuevo_usuario")
+
+        self.assertTrue(usuario.check_password("Registro-Privado-2026!"))
+        self.assertFalse(usuario.is_staff)
+        self.assertFalse(usuario.is_superuser)
+
+        cliente = Cliente.objects.get(usuario=usuario)
+        self.assertEqual(cliente.nombre, "Ana")
+        self.assertEqual(cliente.apellido, "García")
+        self.assertEqual(cliente.email, "nuevo@example.test")
+
+    def test_no_permite_usuario_duplicado(self):
+        User = get_user_model()
+        User.objects.create_user(
+            username="nuevo_usuario",
+            password="Otra-Password-2026!",
+        )
+
+        respuesta = self.registrar()
+
+        self.assertEqual(respuesta.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertFalse(Cliente.objects.filter(
+            usuario__username="nuevo_usuario"
+        ).exists())
+
+    def test_no_permite_correo_duplicado(self):
+        User = get_user_model()
+        User.objects.create_user(
+            username="usuario_existente",
+            email="nuevo@example.test",
+            password="Otra-Password-2026!",
+        )
+
+        respuesta = self.registrar()
+
+        self.assertEqual(respuesta.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertFalse(User.objects.filter(username="nuevo_usuario").exists())
+
+    def test_no_permite_contrasenas_distintas(self):
+        datos = self.datos_validos()
+        datos["password_confirm"] = "Otra-Password-2026!"
+
+        respuesta = self.registrar(datos)
+
+        self.assertEqual(respuesta.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertFalse(
+            get_user_model().objects.filter(username="nuevo_usuario").exists()
+        )
+
+    def test_registro_no_otorga_permisos_administrativos(self):
+        respuesta = self.registrar()
+
+        self.assertEqual(respuesta.status_code, status.HTTP_201_CREATED)
+
+        usuario = get_user_model().objects.get(username="nuevo_usuario")
+        self.assertFalse(usuario.is_staff)
+        self.assertFalse(usuario.is_superuser)
+
+    def test_registro_no_requiere_autenticacion(self):
+        respuesta = self.registrar()
+        self.assertEqual(respuesta.status_code, status.HTTP_201_CREATED)
