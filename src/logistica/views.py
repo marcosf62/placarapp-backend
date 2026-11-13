@@ -13,7 +13,7 @@ from django.utils import timezone
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, status, viewsets
 from rest_framework.decorators import action
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 
 from .models import Envio, MovimientoStock, Proveedor, Sucursal
@@ -33,7 +33,7 @@ FILTER_BACKENDS = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFi
 
 class ProveedorViewSet(viewsets.ModelViewSet):
     queryset = Proveedor.objects.all()
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminUser]
     filter_backends = FILTER_BACKENDS
     filterset_fields = ["activo"]
     search_fields = ["nombre", "email", "telefono"]
@@ -68,7 +68,7 @@ class ProveedorViewSet(viewsets.ModelViewSet):
 
 class EnvioViewSet(viewsets.ModelViewSet):
     queryset = Envio.objects.select_related("pedido")
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminUser]
     filter_backends = FILTER_BACKENDS
     filterset_fields = ["estado", "transportista"]
     search_fields = ["codigo_seguimiento", "transportista", "observaciones"]
@@ -107,7 +107,7 @@ class EnvioViewSet(viewsets.ModelViewSet):
 class MovimientoStockViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = MovimientoStock.objects.select_related("proveedor")
     serializer_class = MovimientoStockSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminUser]
     filter_backends = FILTER_BACKENDS
     filterset_fields = ["tipo", "producto", "proveedor"]
     search_fields = ["observaciones", "proveedor__nombre"]

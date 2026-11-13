@@ -5,7 +5,7 @@ from django.db.models import F
 from rest_framework import viewsets, filters, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 
 from catalogo.models import Producto
 from clientes.models import Direccion
@@ -22,6 +22,11 @@ from .serializers import (
 class PedidoViewSet(viewsets.ModelViewSet):
     serializer_class = PedidoSerializer
     permission_classes = [IsAuthenticated]
+
+    def get_permissions(self):
+        if self.action in {"create", "update", "partial_update", "destroy"}:
+            return [IsAdminUser()]
+        return [IsAuthenticated()]
 
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ["estado", "tipo_entrega", "cliente__nombre"]
@@ -202,8 +207,13 @@ class DetallePedidoViewSet(viewsets.ModelViewSet):
     serializer_class = DetallePedidoSerializer
     permission_classes = [IsAuthenticated]
 
+    def get_permissions(self):
+        if self.action in {"create", "update", "partial_update", "destroy"}:
+            return [IsAdminUser()]
+        return [IsAuthenticated()]
+
     def get_queryset(self):
-        queryset = DetallePedido.objects.all()
+        queryset = DetallePedido.objects.all().order_by("id")
 
         if self.request.user.is_staff:
             return queryset
@@ -216,7 +226,7 @@ class PagoViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        queryset = Pago.objects.all()
+        queryset = Pago.objects.all().order_by("-fecha_monto", "-id")
 
         if self.request.user.is_staff:
             return queryset
