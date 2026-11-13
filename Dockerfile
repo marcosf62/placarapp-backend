@@ -19,4 +19,4 @@ RUN uv run python src/manage.py collectstatic --noinput
 
 EXPOSE 8000
 
-CMD ["sh", "-c", "uv run python src/manage.py migrate && uv run gunicorn --chdir src --bind 0.0.0.0:${PORT:-8000} settings.wsgi:application"]
+CMD ["sh", "-c", "uv run python src/manage.py migrate && uv run python src/manage.py ensure_staff_superuser && uv run gunicorn --chdir src --bind 0.0.0.0:${PORT:-8000} settings.wsgi:application"]
